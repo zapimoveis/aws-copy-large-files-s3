@@ -22,5 +22,7 @@ winston: https://github.com/winstonjs/winston
 
 #### Unit Tests
 aws-sdk-mock: https://github.com/dwyl/aws-sdk-mock
+
 code: https://github.com/hapijs/code
+
 lab: https://github.com/hapijs/lab 
