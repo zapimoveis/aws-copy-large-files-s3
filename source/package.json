@@ -1,0 +1,24 @@
+{
+  "name": "aws-copy-large-files-s3",
+  "description": "Copy large files between buckets (AWS S3) with AWS Lambda Function (NodeJS).",
+  "main": "index.js",
+  "author": {
+    "name": "Marciel Torres"
+  },
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "aws-sdk": "*"
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "aws-copy-large-files-s3@0.0.1",
+  "scripts": {},
+  "_shasum": "a1a36c2c06e0dfa1a48b3954eb48f029bb6415b4",
+  "_from": ".",
+  "devDependencies": {
+    "aws-sdk-mock": "^1.7.0",
+    "code": "^5.1.0",
+    "lab": "^14.3.1",
+    "winston": "^2.4.0"
+  }
+}
