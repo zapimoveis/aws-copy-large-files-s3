@@ -2,6 +2,7 @@
 Copy large files between buckets (AWS S3) with AWS Lambda Function (NodeJS).
 
 AWS SDK Reference: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
+
 Based on: https://gist.github.com/joshbedo/47bab20d47c1754626b5
 
 ## S3 Upload Part Copy
