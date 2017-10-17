@@ -4,7 +4,7 @@
 const AWS = require('aws-sdk');
 
 const maxFileLength = 5368709120; //5GB
-const partSize = (1024 * 1024 * 5); // 5mb
+const partSize = 1024 * 1024 * 5; // 5mb
 const maxUploadTries = 2;
 
 class CopyFile {
@@ -21,11 +21,11 @@ class CopyFile {
                     cb(err, null);
                 }
                 else {
-                    this._initCopy(function (err, data) {
-                        if (err) {
+                    this._initCopy(function (errCopy, dataCopy) {
+                        if (errCopy) {
                             return cb('Error on copy object.', null);
                         }
-                        cb(null, data);
+                        cb(null, dataCopy);
                     });
                 }
             });
@@ -139,8 +139,8 @@ class CopyFile {
             for (var start = 0; start < _this._contentLength; start += partSize) {
 
                 _partNum++;
-                let _startByte = (start === 0 ? start : start + 1);
-                let _endByte = (start + partSize > _this._contentLength ? _this._contentLength : start + partSize);
+                let _startByte = start === 0 ? start : start + 1;
+                let _endByte = start + partSize > _this._contentLength ? _this._contentLength : start + partSize;
 
                 var partParams = {
                     Bucket: _this._params.destination_bucket,
@@ -158,14 +158,14 @@ class CopyFile {
     }
 
     _uploadPartCopy(multipart, partParams, tryNum, cb) {
-        tryNum = tryNum || 1;
+        let _tryNum = tryNum || 1;
         let _this = this;
         this._s3.uploadPartCopy(partParams, function (err, data) {
             if (err) {
                 _this._log(err);
-                if (tryNum < maxUploadTries) {
+                if (_tryNum < maxUploadTries) {
                     _this._log(['Retrying upload of part: #', partParams.PartNumber].join(' '));
-                    _this._uploadPartCopy(multipart, partParams, tryNum + 1);
+                    _this._uploadPartCopy(multipart, partParams, _tryNum + 1);
                 } else {
                     _this._log(['Failed uploading part: #', partParams.PartNumber].join(' '));
                 }
@@ -186,7 +186,7 @@ class CopyFile {
                     MultipartUpload: _this._multipartMap,
                     UploadId: multipart.UploadId
                 };
-                _this._completeMultipartUpload(doneParams, function (err, data) {
+                _this._completeMultipartUpload(doneParams, function (errCompleted, dataCompleted) {
                     {
 
                     }
@@ -232,7 +232,7 @@ class CopyFile {
 
     _totalTimeInSeconds() {
         if (this._startTime && this._endTime) {
-            return ((this._endTime - this._startTime) / 1000);
+            return (this._endTime - this._startTime) / 1000;
         }
         return 0;
     }

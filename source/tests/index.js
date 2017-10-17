@@ -1,3 +1,5 @@
+/* jshint node: true */
+
 const Code = require('code');
 const Lab = require('lab');
 const lab = Lab.script();
