@@ -15,12 +15,14 @@ class CopyFile {
     }
 
     _start(params, cb) {
+        let _this = this;
         if (this._verifyParams(params)) {
             this._getContentLenght(function (err, data) {
                 if (err) {
                     cb(err, null);
                 }
                 else {
+                    _this._log(data);
                     this._initCopy(function (errCopy, dataCopy) {
                         if (errCopy) {
                             return cb('Error on copy object.', null);
@@ -129,7 +131,7 @@ class CopyFile {
         let _this = this;
         this._s3.createMultipartUpload({ Bucket: this._params.destination_bucket, Key: this._params.destination_key }, function (err, multipart) {
             if (err) {
-                _this._log(err)
+                _this._log(err);
                 return cb('Error on copy object.', null);
             }
 
@@ -146,7 +148,7 @@ class CopyFile {
                     Bucket: _this._params.destination_bucket,
                     Key: _this._params.destination_key,
                     CopySource: [_this._params.source_bucket, _this._params.source_key].join('/'),
-                    CopySourceRange: ['bytes=', _startByte, "-", _endByte].join(''),
+                    CopySourceRange: ['bytes=', _startByte, '-', _endByte].join(''),
                     PartNumber: String(_partNum),
                     UploadId: multipart.UploadId
                 };
@@ -157,7 +159,7 @@ class CopyFile {
         });
     }
 
-    _uploadPartCopy(multipart, partParams, tryNum, cb) {
+    _uploadPartCopy(multipart, partParams, tryNum) {
         let _tryNum = tryNum || 1;
         let _this = this;
         this._s3.uploadPartCopy(partParams, function (err, data) {
@@ -188,7 +190,12 @@ class CopyFile {
                 };
                 _this._completeMultipartUpload(doneParams, function (errCompleted, dataCompleted) {
                     {
-
+                        if (errCompleted) {
+                            _this.log(errCompleted);
+                        }
+                        else {
+                            _this.log(dataCompleted);
+                        }
                     }
                 });
             }
@@ -200,7 +207,7 @@ class CopyFile {
         let _this = this;
         this._s3.completeMultipartUpload(doneParams, function (err, data) {
             if (err) {
-                _this._log(err)
+                _this._log(err);
                 return cb('An error occurred while completing multipart upload.', null);
             }
             _this._endTime = new Date();
@@ -238,7 +245,8 @@ class CopyFile {
     }
 
     _log(msg) {
-        console.log(msg);
+        //TODO: implement log
+        return msg;
     }
 
     _throwError(err) {
